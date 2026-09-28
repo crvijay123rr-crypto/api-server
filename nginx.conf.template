@@ -1,13 +1,19 @@
 server {
     listen ${PORT};
     server_name _;
+    # Preserve Telegram local-mode paths containing "//tmp/...".
+    merge_slashes off;
     client_max_body_size 2000m;
     # Local Bot API returns an absolute /tmp path. The result-bot lives in a
     # different Heroku app, so expose only Bot API-generated document files.
-    location ~ ^/file/bot[^/]+//tmp/telegram-bot-api/(.+)$ {
+    location ~ ^/file/bot[^/]+/(?:/tmp/telegram-bot-api/|tmp/telegram-bot-api/)(.+)$ {
         alias /tmp/telegram-bot-api/$1;
         default_type application/octet-stream;
         sendfile on;
+    }
+    location = /fix-health {
+        default_type text/plain;
+        return 200 "telegram-api-file-fix-v2\n";
     }
     location / {
         proxy_pass http://127.0.0.1:8081;
