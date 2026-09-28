@@ -1,0 +1,15 @@
+{
+  "name": "Telegram Local Bot API Server",
+  "description": "Telegram Bot API server in local mode for large-file downloads.",
+  "stack": "container",
+  "env": {
+    "TELEGRAM_API_ID": {
+      "description": "Telegram API ID from my.telegram.org/apps",
+      "required": true
+    },
+    "TELEGRAM_API_HASH": {
+      "description": "Telegram API hash from my.telegram.org/apps",
+      "required": true
+    }
+  }
+}
