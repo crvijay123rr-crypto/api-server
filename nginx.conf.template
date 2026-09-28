@@ -1,0 +1,20 @@
+server {
+    listen ${PORT};
+    server_name _;
+    client_max_body_size 2000m;
+    # Local Bot API returns an absolute /tmp path. The result-bot lives in a
+    # different Heroku app, so expose only Bot API-generated document files.
+    location ~ ^/file/bot[^/]+//tmp/telegram-bot-api/(.+)$ {
+        alias /tmp/telegram-bot-api/$1;
+        default_type application/octet-stream;
+        sendfile on;
+    }
+    location / {
+        proxy_pass http://127.0.0.1:8081;
+        proxy_http_version 1.1;
+        proxy_buffering off;
+        proxy_request_buffering off;
+        proxy_read_timeout 3600s;
+        proxy_send_timeout 3600s;
+    }
+}
